@@ -1,3 +1,5 @@
+import java.util.Random;
+
 /**
  * Our specialty FirePokemon that inherits from our Pokemon class.
  */
@@ -21,6 +23,7 @@ public class FirePokemon extends Pokemon {
      * FirePokemon's specialty attack is FLAME THROWER
      */
     public FirePokemon() {
+        super();
         pokeType = PokemonType.FIRE;
         specialtyAttack = "FLAME THROWER";
         specialtyProbability = specProb;
@@ -58,6 +61,16 @@ public class FirePokemon extends Pokemon {
      * Implement this.
      */
     public boolean attack(final Pokemon opponent) {
+        super.attack(opponent);
+        Random rand = new Random();
+        if (opponent.getHitPoints() > 0 && opponent.pokeType != PokemonType.FIRE) {
+            if (specialtyProbability > rand.nextDouble()){
+                System.out.println(getName() + " executes a specialty attack... " + specialtyAttack + "!!!");
+                opponent.setHitPoints(0);
+                System.out.println(opponent.getName() + " has been defeated!");
+                return true;
+            }
+        }
         return false;
     }
 

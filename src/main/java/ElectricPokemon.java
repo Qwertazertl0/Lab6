@@ -1,3 +1,5 @@
+import java.util.Random;
+
 /**
  * Our specialty ElectricPokemon that inherits from our Pokemon class.
  */
@@ -21,6 +23,7 @@ public class ElectricPokemon extends Pokemon {
      * ElectricPokemon's specialty attack is THUNDERBOLT
      */
     public ElectricPokemon() {
+        super();
         pokeType = PokemonType.ELECTRIC;
         specialtyAttack = "THUNDERBOLT";
         specialtyProbability = specProb;
@@ -59,6 +62,16 @@ public class ElectricPokemon extends Pokemon {
      * Implement this.
      */
     public boolean attack(final Pokemon opponent) {
+        super.attack(opponent);
+        Random rand = new Random();
+        if (opponent.getHitPoints() > 0 && opponent.pokeType != PokemonType.ELECTRIC) {
+            if (specialtyProbability > rand.nextDouble()){
+                System.out.println(getName() + " executes a specialty attack... " + specialtyAttack + "!!!");
+                opponent.setHitPoints(0);
+                System.out.println(opponent.getName() + " has been defeated!");
+                return true;
+            }
+        }
         return false;
     }
 

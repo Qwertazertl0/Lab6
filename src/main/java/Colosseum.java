@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -12,6 +13,10 @@ import java.util.Scanner;
  * @see <a href="https://cs125.cs.illinois.edu/lab/9/">Lab 9 Description</a>
  */
 public class Colosseum {
+    /**
+     * For when you want to use the number 3, but Checkstyle complains that it's a magic number.
+     */
+    static final int CHOICE_IS_THREE = 3;
     /**
      * The maximum number of hit points we will allow a Pokemon to start with.
      */
@@ -102,8 +107,89 @@ public class Colosseum {
      * (Look, we can return objects too!)
      */
     public static Pokemon buildPokemon() {
-        Pokemon returnPokemon = null;
-        return returnPokemon;
+        Pokemon tempPokemon = new Pokemon();
+        boolean invalid = true;
+
+        printTypeMenu();
+        while (invalid) {
+            try {
+                int choice = myScan.nextInt();
+                if (choice == 1) {
+                    tempPokemon = new ElectricPokemon();
+                    invalid = false;
+                } else if (choice == 2) {
+                    tempPokemon = new FirePokemon();
+                    invalid = false;
+                } else if (choice == CHOICE_IS_THREE) {
+                    tempPokemon = new WaterPokemon();
+                    invalid = false;
+                } else {
+                    System.out.println("Sorry. Enter 1, 2, or 3");
+                    printTypeMenu();
+                }
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Try again: ");
+                myScan.nextLine();
+            }
+        }
+
+        System.out.print("Please name your Pokemon: ");
+        tempPokemon.setName(myScan.next());
+
+        invalid = true;
+        System.out.print("How many hit points will it have? (1 - 50): ");
+        while (invalid) {
+            try {
+                int hp = myScan.nextInt();
+                if (hp <= MAX_HIT_POINTS && hp > 0) {
+                    tempPokemon.setHitPoints(hp);
+                    invalid = false;
+                } else {
+                    System.out.print("Sorry. Hit points must be between 1 and 50: ");
+                }
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Try again: ");
+                myScan.nextLine();
+            }
+        }
+
+        invalid = true;
+        System.out.println("Split fifty points between attack level and defense level.");
+        System.out.print("Enter your attack level (1 - 49): ");
+        while (invalid) {
+            try {
+                int att = myScan.nextInt();
+                if (att > 0 && att < MAX_HIT_POINTS) {
+                    tempPokemon.setAttackLevel(att);
+                    invalid = false;
+                } else {
+                    System.out.print("Sorry. The attack level must be between 1 and 49: ");
+                }
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Try again: ");
+                myScan.nextLine();
+            }
+        }
+
+        invalid = true;
+        int defMax = MAX_HIT_POINTS - tempPokemon.getAttackLevel();
+        System.out.print("Enter your defense level (1 - " + defMax + "): ");
+        while (invalid) {
+            try {
+                int def = myScan.nextInt();
+                if (def > 0 && def <= defMax) {
+                    tempPokemon.setDefenseLevel(def);
+                    invalid = false;
+                } else {
+                    System.out.print("Sorry. The defense level must be between 1 and " + defMax + ": ");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Try again: ");
+                myScan.nextLine();
+            }
+        }
+
+        return tempPokemon;
     }
 
     /**
